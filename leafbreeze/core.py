@@ -1,7 +1,11 @@
 from leafbreeze.Components.BetterClasses.booleanEx import *
 from leafbreeze.Components.Constants.constants import *
 
+from leafbreeze.Components.handRecognition import *
+from leafbreeze.Components.Menu.mainMenu import *
+from leafbreeze.Components.background import *
 from leafbreeze.Components.controls import *
+from leafbreeze.Components.leaf import *
 from leafbreeze.Components.fade import *
 
 from datetime import datetime
@@ -35,6 +39,10 @@ class LeafBreeze():
         self.mouse_click = EdgeDetectorEx()
 
         self.controls = Controls()
+        self.menu = Menu(MenuType.UNDEFINED, self.constants, None)
+        self.background = Background(self.constants)
+        self.leaf = Leaf(self.constants)
+        self.hand = HandRecognition()
 
 
     def recalculate(self):
@@ -48,6 +56,9 @@ class LeafBreeze():
         else: 
             self.constants.screen_size = ScreenSize(self.screen.get_size()[0], self.screen.get_size()[1])
 
+        self.menu.recalculate()
+        self.menu.check()
+
         self.constants.recalculate.set(False)
 
 
@@ -59,21 +70,32 @@ class LeafBreeze():
         self.__updateEventManager()
 
         #reset frame
-        self.screen.fill("black")
+        self.screen.fill("blue")
 
         if self.manual_control.compare():
             self.__updateControls()
+        
+        self.background.onScreen(self.screen)
+        self.leaf.onScreen(self.screen, self.clock)
 
+        self.menu.addControls(self.controls)
+        self.menu.onScreen(self.screen)
+    
+        self.hand.update()
+        self.__updateGameLoopCheck()
 
         pygame.display.update()
         self.dt = self.clock.tick(self.constants.FPS) / 1000
 
         self.__updateScreenshoot()
-    
 
-    
+
+    def __updateGameLoopCheck(self):
+        if self.menu.menus[0].ENABLED.compare():
+            self.leaf.SHOULD_APPLY_GRAVITY.set(True)
+        else: self.leaf.reset()
+
     def __updateEventManager(self):
-
         try:
             for event in pygame.event.get():
                 if event.type == pygame.JOYDEVICEADDED:
@@ -84,6 +106,7 @@ class LeafBreeze():
 
                 if event.type == pygame.QUIT:
                     self.running.set(False)
+                    self.hand.exit()
                     print('\n\n')
                     pygame.quit()
         except: pass

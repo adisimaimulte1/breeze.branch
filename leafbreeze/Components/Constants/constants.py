@@ -9,7 +9,57 @@ device_relative_path = os.path.join(os.path.dirname(__file__), '..', '..', 'Imag
 
 screenshot_path = os.path.join(device_relative_path, 'Screenshots\\')
 
+
 default_fps = 150
+default_system_font = "arial"
+default_text_color = "white"
+
+default_sound = True
+
+
+
+
+img_leaf1_source = "Leaf/Leaf_1.png"
+img_leaf2_source = "Leaf/Leaf_2.png"
+img_leaf3_source = "Leaf/Leaf_3.png"
+
+img_play_button_source = "Buttons/MainMenu/Play_Button.png"
+img_selected_play_button_source = "Buttons/MainMenu/Play_Button_Selected.png"
+
+img_sound_button_closed_source = "Buttons/MainMenu/Sound_Button_Closed.png"
+img_sound_button_open_source = "Buttons/MainMenu/Sound_Button_Open.png"
+img_selected_sound_button_closed_source = "Buttons/MainMenu/Sound_Button_Closed_Selected.png"
+img_selected_sound_button_open_source = "Buttons/MainMenu/Sound_Button_Open_Selected.png"
+
+img_tree_with_leaves_source = "Tree/Tree_With_Leaves.png"
+
+
+
+img_leaf1 = pygame.image.load(os.path.join(device_relative_path, img_leaf1_source))
+img_leaf2 = pygame.image.load(os.path.join(device_relative_path, img_leaf2_source))
+img_leaf3 = pygame.image.load(os.path.join(device_relative_path, img_leaf3_source))
+
+img_play_button = pygame.image.load(os.path.join(device_relative_path, img_play_button_source))
+img_selected_play_button = pygame.image.load(os.path.join(device_relative_path, img_selected_play_button_source))
+
+img_sound_button_closed = pygame.image.load(os.path.join(device_relative_path, img_sound_button_closed_source))
+img_sound_button_open = pygame.image.load(os.path.join(device_relative_path, img_sound_button_open_source))
+img_selected_sound_button_closed = pygame.image.load(os.path.join(device_relative_path, img_selected_sound_button_closed_source))
+img_selected_sound_button_open = pygame.image.load(os.path.join(device_relative_path, img_selected_sound_button_open_source))
+
+img_tree_with_leaves = pygame.image.load(os.path.join(device_relative_path, img_tree_with_leaves_source))
+
+
+
+img_sound_button_closed = pygame.transform.scale(img_sound_button_closed, (200, 200))
+img_sound_button_open = pygame.transform.scale(img_sound_button_open, (200, 200))
+img_selected_sound_button_closed = pygame.transform.scale(img_selected_sound_button_closed, (200, 200))
+img_selected_sound_button_open = pygame.transform.scale(img_selected_sound_button_open, (200, 200))
+
+img_tree_with_leaves = pygame.transform.scale(img_tree_with_leaves, (800, 800))
+
+
+
 
 #KEY BINDS
 left_wheel_forward_key = pygame.K_q
@@ -123,38 +173,27 @@ def getRelativeFromAbsolutePath(path: str) -> str:
 class Constants():
     def __init__(self, 
                  fps = default_fps,
-                 screen_size: ScreenSize = ScreenSize()):
+                 screen_size: ScreenSize = ScreenSize(),
+                 
+                 __reset_buttons_default: bool = False):
         
         self.recalculate = BooleanEx(False)
+        self.reset_buttons_default = __reset_buttons_default
 
         self.FPS = fps
         self.screen_size = screen_size
 
+        self.SOUND = BooleanEx(default_sound)
+
     #resets all the values to default
     def default(self):
         self.reset_buttons_default = False
-
-    
-    def updateRobotImgSource(self, 
-                             path = None, 
-                             name = None, 
-                             extension = None):
-        
-        if path is not None:
-            self.ROBOT_IMG_PATH = path
-        if name is not None:
-            self.ROBOT_IMG_NAME = name
-        if extension is not None:
-            self.ROBOT_IMG_EX = extension
-
-        self.ROBOT_IMG_SOURCE = os.path.join(device_relative_path, "{0}{1}.{2}".format(self.ROBOT_IMG_PATH, 
-                                                    self.ROBOT_IMG_NAME, 
-                                                    self.ROBOT_IMG_EX))
           
     def copy(self):
         new = Constants(
             self.FPS,
             self.screen_size,
+            self.reset_buttons_default
         )
         return new
     
