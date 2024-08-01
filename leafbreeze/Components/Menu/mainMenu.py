@@ -86,7 +86,7 @@ class Menu(AbsMenu):
 
     # called everytime when reentering the menu
     def reset(self):
-        self.selected = Selected.PLAY_BUTTON
+        self.selected = Selected.PLAY
         self.enable()
 
     def create(self):

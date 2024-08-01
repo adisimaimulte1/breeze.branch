@@ -67,6 +67,7 @@ img_hand_four_fingers = pygame.image.load(os.path.join(device_relative_path, img
 img_hand_five_fingers = pygame.image.load(os.path.join(device_relative_path, img_hand_five_fingers_source))
 
 img_background = pygame.image.load(os.path.join(device_relative_path, img_background_source))
+music_path = os.path.join(device_relative_path, "Woodcraft.mp3")
 
 
 

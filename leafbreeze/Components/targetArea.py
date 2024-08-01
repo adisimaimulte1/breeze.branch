@@ -8,6 +8,11 @@ class TargetArea():
         self.rectangle_size = (300, 300)
         self.rectangle_center = (0, 0)
     
+    def reset(self):
+        self.REACHED = BooleanEx(True)
+        self.rectangle_size = (300, 300)
+        self.rectangle_center = (0, 0)
+        
     def __drawBorder(self, screen: pygame.Surface):
         pygame.draw.lines(screen, "white", True, self.__findBorder(), 30)
     

@@ -54,21 +54,6 @@ class Hand():
         
         self.show_index = fingers
 
-    def hit(self, leaf: Leaf) -> bool:
-        """Perform a hit if the hand is under the leaf and can hit."""
-        if self.can_hit and self.is_under_leaf(leaf):
-            self.can_hit = False  # Disable further hits until reset
-            return True
-        return False
-
-    def is_under_leaf(self, leaf: Leaf) -> bool:
-        """Check if the hand is positioned under the leaf."""
-        leaf_x, leaf_y = leaf.pose.tuple()
-        hand_x, hand_y = self.pose.tuple()
-        
-        # Define the hit region: hand is considered under the leaf if its y is close to the leaf's y
-        return (abs(hand_x - leaf_x) < 50) and (hand_y > leaf_y and hand_y < leaf_y + 50)
-    
     def check_target_area(self, target_x: int):
         """Check if the leaf is over a target area and handle lives."""
         target_area_width = 100  # Width of the target area
@@ -81,6 +66,72 @@ class Hand():
         self.can_hit = True
 
     def onScreen(self, screen: pygame.Surface):
+        for each in self.rectangles:
+            each.center = self.pose.tuple()
+
+        screen.blit(self.images[self.show_index], self.rectangles[self.show_index])
+
+
+
+class AuxiliaryHand():
+    def __init__(self, constants: Constants):
+        self.constants = constants
+        self.original_images = [img_hand_zero_fingers,
+                                img_hand_one_finger,
+                                img_hand_two_fingers,
+                                img_hand_three_fingers,
+                                img_hand_four_fingers,
+                                img_hand_five_fingers]
+
+        # Rotate all images upside down (180 degrees)
+        self.images = [pygame.transform.rotate(img, 180) for img in self.original_images]
+        
+
+        self.rectangles = [img.get_rect() for img in self.images]
+        self.masks = [pygame.mask.from_surface(img) for img in self.images]
+
+        self.show_index = 0  # Index of the number of fingers to display
+        self.pose = Pose(self.constants.screen_size.width * 0.9, 0)  # Start position (e.g., bottom-left corner)
+        self.target_pose = Pose(self.constants.screen_size.width * 0.9, self.constants.screen_size.width * 0.06)  # Target position to move towards
+
+        self.speed = 5  # Speed at which the hand moves to the target position
+        self.is_visible = False  # Initially hidden
+
+    def set_fingers(self, fingers: int):
+        """Set the number of fingers to display and make the hand visible."""
+        self.show_index = fingers
+        self.is_visible = True
+
+    def update_position(self):
+        """Move the hand towards its target position."""
+        if not self.is_visible:
+            return
+        
+        dx = self.target_pose.x - self.pose.x
+        dy = self.target_pose.y - self.pose.y
+        distance = math.sqrt(dx**2 + dy**2)
+
+        if distance > self.speed:
+            # Normalize direction and move towards target
+            self.pose.x += (dx / distance) * self.speed
+            self.pose.y += (dy / distance) * self.speed
+        else:
+            # If close enough, snap to target position
+            self.pose.x = self.target_pose.x
+            self.pose.y = self.target_pose.y
+
+    def hide(self):
+        """Hide the auxiliary hand by moving it off-screen."""
+        self.is_visible = False
+        self.pose = Pose(self.constants.screen_size.width * 0.9, 0)  # Move back to starting position
+
+    def onScreen(self, screen: pygame.Surface):
+        """Render the auxiliary hand on the screen."""
+        if not self.is_visible:
+            return
+
+        self.update_position()
+
         for each in self.rectangles:
             each.center = self.pose.tuple()
 
