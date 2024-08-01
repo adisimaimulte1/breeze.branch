@@ -8,9 +8,9 @@ import os
 device_relative_path = os.path.join(os.path.dirname(__file__), '..', '..', 'Images')
 
 screenshot_path = os.path.join(device_relative_path, 'Screenshots\\')
-API_KEY = "FUNNY WORDS"
+API_KEY = "BIG FUNNY"
 
-default_fps = 250
+default_fps = 500
 default_system_font = "arial"
 default_text_color = "white"
 

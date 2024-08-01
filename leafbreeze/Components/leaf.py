@@ -34,7 +34,7 @@ class Leaf:
         self.levels = [screen_height * 0.3, screen_height * 0.5, screen_height * 0.7, screen_height * 0.8]
         self.current_level = 0
 
-        self.max_lives = 20
+        self.max_lives = 10
         self.total_lives = 9
         self.lives_per_level = self.total_lives // 3
         self.lives = self.total_lives
@@ -43,15 +43,17 @@ class Leaf:
         self.target_speeds = [10, 12, 14, 16]
 
         self.float_range = 10
-        self.pose = Pose(self.constants.screen_size.width * 0.5, screen_height * 0.25)
+        self.start_pose = Pose(self.constants.screen_size.width * 0.5, screen_height * 0.25)
+        self.pose = self.start_pose
         self.time_4_one_frame = int(1000 / self.leaf_fps)
 
     def reset(self):
-        self.pose = Pose(self.constants.screen_size.width * 0.5, self.constants.screen_size.height * 0.25)
+        self.pose = self.start_pose
         self.SHOULD_APPLY_GRAVITY = BooleanEx(False)
         self.ON_TARGET = BooleanEx(False)
         self.DISABLE = BooleanEx(False)
         self.lives = self.total_lives
+
 
     def animate(self, clock):
         self.time = (self.time + clock.get_time()) % 1000
@@ -78,12 +80,14 @@ class Leaf:
         self.pose.x = max(0, min(self.pose.x, self.constants.screen_size.width))
 
     def adjust_lives(self, delta_lives: int):
-        print(self.lives)
         self.lives = max(0, min(self.lives + delta_lives, self.max_lives))
-        print(self.lives)
+
         if self.total_lives < self.lives:
             self.current_level = 0
         else: self.current_level = (self.total_lives - self.lives) // self.lives_per_level
+
+        if self.total_lives == self.max_lives:
+            self.reset()
 
     def check_target_area(self, target_x: int):
         if abs(self.pose.x - target_x) < 50:

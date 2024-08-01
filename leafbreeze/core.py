@@ -38,6 +38,7 @@ class LeafBreeze():
 
         self.dt = 0
         self.catch_streak = 0
+        self.percent = 0
         self.SOUND_DETECTOR = EdgeDetectorEx()
 
         self.controls = Controls()
@@ -149,7 +150,7 @@ class LeafBreeze():
                 if self.ai.lastPromptWasSimon():
                     self.leaf.adjust_lives(1)
                 else: self.leaf.adjust_lives(-1)
-                
+
                 self.catch_streak = 0
 
         else: self.leaf.ON_TARGET.set(False)
