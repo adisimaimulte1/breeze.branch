@@ -8,9 +8,9 @@ import os
 device_relative_path = os.path.join(os.path.dirname(__file__), '..', '..', 'Images')
 
 screenshot_path = os.path.join(device_relative_path, 'Screenshots\\')
+API_KEY = "FUNNY WORDS"
 
-
-default_fps = 150
+default_fps = 250
 default_system_font = "arial"
 default_text_color = "white"
 
@@ -40,6 +40,8 @@ img_hand_three_fingers_source = "Hand/Three_Fingers.png"
 img_hand_four_fingers_source = "Hand/Four_Fingers.png"
 img_hand_five_fingers_source = "Hand/Five_Fingers.png"
 
+img_background_source = "Background.jpg"
+
 
 
 
@@ -64,6 +66,8 @@ img_hand_three_fingers = pygame.image.load(os.path.join(device_relative_path, im
 img_hand_four_fingers = pygame.image.load(os.path.join(device_relative_path, img_hand_four_fingers_source))
 img_hand_five_fingers = pygame.image.load(os.path.join(device_relative_path, img_hand_five_fingers_source))
 
+img_background = pygame.image.load(os.path.join(device_relative_path, img_background_source))
+
 
 
 
@@ -72,6 +76,7 @@ img_sound_button_open = pygame.transform.scale(img_sound_button_open, (200, 200)
 img_selected_sound_button_closed = pygame.transform.scale(img_selected_sound_button_closed, (200, 200))
 img_selected_sound_button_open = pygame.transform.scale(img_selected_sound_button_open, (200, 200))
 
+img_background = pygame.transform.scale(img_background, (1700, 1200))
 img_tree_with_leaves = pygame.transform.scale(img_tree_with_leaves, (800, 800))
 
 hand_scale = 1.1

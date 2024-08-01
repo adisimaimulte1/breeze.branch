@@ -69,7 +69,7 @@ class HandRecognition():
                 cv2.putText(img, f'Position: ({self.hand_x}, {self.hand_y})', (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
         # Show the frame
-        cv2.imshow("Hand Tracking", img)
+        #cv2.imshow("Hand Tracking", img)
 
     def getHandPosition(self):
         return (self.hand_x, self.hand_y)

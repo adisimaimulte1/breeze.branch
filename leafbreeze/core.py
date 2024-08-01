@@ -4,6 +4,8 @@ from leafbreeze.Components.Constants.constants import *
 from leafbreeze.Components.handRecognition import *
 from leafbreeze.Components.Menu.mainMenu import *
 from leafbreeze.Components.background import *
+from leafbreeze.Components.targetArea import *
+from leafbreeze.Components.ControlAI import *
 from leafbreeze.Components.controls import *
 from leafbreeze.Components.hand import *
 from leafbreeze.Components.leaf import *
@@ -46,60 +48,78 @@ class LeafBreeze():
         self.hand_recognition = HandRecognition()
         self.hand = Hand(self.constants)
 
-
-    def recalculate(self):
-        resize_screen = self.constants.checkScreenSize(self.screen.get_size())
-
-        if self.constants.recalculate.compare(False):
-            return 0
-        
-        if resize_screen:
-            self.screen = pygame.display.set_mode(self.constants.screen_size.get(), pygame.RESIZABLE)
-        else: 
-            self.constants.screen_size = ScreenSize(self.screen.get_size()[0], self.screen.get_size()[1])
-
-        self.menu.recalculate()
-        self.menu.check()
-
-        self.constants.recalculate.set(False)
+        self.ai = AI(self.constants)
+        self.target = TargetArea(self.constants)
 
 
     def RUNNING(self):
         return self.running.compare()
 
     def update(self):
-        self.recalculate()
         self.__updateEventManager()
+        self.controls.update()
 
         #reset frame
         self.screen.fill("blue")
-
-        if self.manual_control.compare():
-            self.__updateControls()
 
         self.hand_recognition.update()
         self.hand.setHandInfo(self.hand_recognition.getHandPosition()[0], 
                               self.hand_recognition.getFingerNumber())
         
         self.background.onScreen(self.screen)
-        self.leaf.onScreen(self.screen, self.clock)
+        
         self.hand.onScreen(self.screen)
+        self.leaf.onScreen(self.screen, self.clock)
+        self.target.onScreen(self.screen)
 
         self.menu.addControls(self.controls)
         self.menu.onScreen(self.screen)
     
         self.__updateGameLoopCheck()
+        self.__updateAiControls()
 
         pygame.display.update()
         self.dt = self.clock.tick(self.constants.FPS) / 1000
-
-        self.__updateScreenshoot()
 
 
     def __updateGameLoopCheck(self):
         if self.menu.menus[0].ENABLED.compare():
             self.leaf.SHOULD_APPLY_GRAVITY.set(True)
         else: self.leaf.reset()
+    
+    def __updateAiControls(self):
+        if self.menu.menus[0].ENABLED.compare(False):
+            return None
+        
+        if self.target.REACHED.compare():
+            prompt = self.ai.generate_simon_stays_task()
+            parts = prompt.split(" ")
+
+            self.percent = int(parts[0])
+            self.finger = int(parts[1])
+
+            if abs(self.percent - self.ai.last_percent) < 40:
+                self.percent = (self.percent + 40 - abs(self.percent - self.ai.last_percent)) % 100
+            
+            if self.percent > 90:
+                self.percent = 90
+            if self.percent < 10:
+                self.percent = 10
+            
+            self.x = self.constants.screen_size.width * self.percent / 100
+
+            self.ai.setLast(self.percent, self.finger)
+            self.target.addZone(self.x)
+            self.leaf.move_to_target_area(self.x)
+
+        if self.hand.check_target_area(self.x):
+            self.target.REACHED.set(True)
+            self.leaf.adjust_lives(-1)
+
+        if self.leaf.check_target_area(self.x):
+            self.target.REACHED.set(True)
+            self.leaf.adjust_lives(1)
+
 
     def __updateEventManager(self):
         try:
@@ -116,54 +136,6 @@ class LeafBreeze():
                     print('\n\n')
                     pygame.quit()
         except: pass
-
-
-    def __updateControls(self):
-        self.controls.update()
-
-        if self.controls.using_joystick.compare():
-            self.__updateJoystick()
-
-
-    def __updateJoystick(self):
-        left_x = round(self.controls.joystick.get_axis(self.controls.keybinds.left_x), 4)
-        left_y = round(self.controls.joystick.get_axis(self.controls.keybinds.left_y), 4)
-        right_x = round(self.controls.joystick.get_axis(self.controls.keybinds.right_x), 4)
-
-        self.__updateJoystickButtons()
-
-        ...
-
-    def __updateJoystickButtons(self):
-        ...
-
-    def __updateScreenshoot(self):
-        if exists(self.controls.joystick):
-            if self.manual_control.compare(False):
-                self.controls.update()
-            
-            if self.controls.joystick_detector[self.controls.keybinds.screenshot_button].rising:
-                #take a screenshot
-
-                screenshot = pygame.Surface(self.constants.screen_size.get())
-                screenshot.blit(self.screen, (0, 0))
-
-                date_and_time_info = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
-                image_name_with_time_format = "{0}.png".format(date_and_time_info)
-                individual_data = date_and_time_info.split("-")
-
-                device_screenshot_path = os.path.join(os.path.join(os.path.dirname(__file__), "Screenshots"), image_name_with_time_format)
-                pygame.image.save(screenshot, device_screenshot_path)
-
-                print("\n\nyou took a screenshot :o -- check it out:")
-
-                for each in individual_data: # easter egg? :0
-                    if each == '42' or each == '69':
-                        print("\n\nnice 😎")
-                        break
-
-                print(device_screenshot_path)
-
 
 
             
