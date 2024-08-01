@@ -5,6 +5,7 @@ from leafbreeze.Components.handRecognition import *
 from leafbreeze.Components.Menu.mainMenu import *
 from leafbreeze.Components.background import *
 from leafbreeze.Components.controls import *
+from leafbreeze.Components.hand import *
 from leafbreeze.Components.leaf import *
 from leafbreeze.Components.fade import *
 
@@ -42,7 +43,8 @@ class LeafBreeze():
         self.menu = Menu(MenuType.UNDEFINED, self.constants, None)
         self.background = Background(self.constants)
         self.leaf = Leaf(self.constants)
-        self.hand = HandRecognition()
+        self.hand_recognition = HandRecognition()
+        self.hand = Hand(self.constants)
 
 
     def recalculate(self):
@@ -74,14 +76,18 @@ class LeafBreeze():
 
         if self.manual_control.compare():
             self.__updateControls()
+
+        self.hand_recognition.update()
+        self.hand.setHandInfo(self.hand_recognition.getHandPosition()[0], 
+                              self.hand_recognition.getFingerNumber())
         
         self.background.onScreen(self.screen)
         self.leaf.onScreen(self.screen, self.clock)
+        self.hand.onScreen(self.screen)
 
         self.menu.addControls(self.controls)
         self.menu.onScreen(self.screen)
     
-        self.hand.update()
         self.__updateGameLoopCheck()
 
         pygame.display.update()
@@ -106,7 +112,7 @@ class LeafBreeze():
 
                 if event.type == pygame.QUIT:
                     self.running.set(False)
-                    self.hand.exit()
+                    self.hand_recognition.exit()
                     print('\n\n')
                     pygame.quit()
         except: pass

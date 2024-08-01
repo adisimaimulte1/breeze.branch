@@ -13,6 +13,7 @@ class HandRecognition():
 
         self.hand_x = 0
         self.hand_y = 0
+        self.fingers_up = 0
 
     # Function to count fingers
     def count_fingers(self, hand_landmarks):
@@ -57,14 +58,14 @@ class HandRecognition():
                 self.mp_draw.draw_landmarks(img, hand_landmarks, self.mp_hands.HAND_CONNECTIONS)
 
                 # Count fingers
-                fingers_up = self.count_fingers(hand_landmarks)
+                self.fingers_up = self.count_fingers(hand_landmarks)
 
                 # Get hand position (using the wrist landmark for simplicity)
                 self.hand_x = int(hand_landmarks.landmark[self.mp_hands.HandLandmark.WRIST].x * img.shape[1])
                 self.hand_y = int(hand_landmarks.landmark[self.mp_hands.HandLandmark.WRIST].y * img.shape[0])
 
                 # Display the count on the frame
-                cv2.putText(img, f'Fingers: {fingers_up}', (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 3)
+                cv2.putText(img, f'Fingers: {self.fingers_up}', (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 3)
                 cv2.putText(img, f'Position: ({self.hand_x}, {self.hand_y})', (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
         # Show the frame
@@ -72,6 +73,9 @@ class HandRecognition():
 
     def getHandPosition(self):
         return (self.hand_x, self.hand_y)
+    
+    def getFingerNumber(self):
+        return self.fingers_up
     
     def exit(self):
         # Release the webcam and close windows

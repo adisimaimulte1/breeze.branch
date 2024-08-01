@@ -1,6 +1,7 @@
-import math
 from leafbreeze.Components.BetterClasses.booleanEx import *
 from leafbreeze.Components.Constants.constants import *
+
+import math
 
 class Leaf():
     def __init__(self, constants: Constants):

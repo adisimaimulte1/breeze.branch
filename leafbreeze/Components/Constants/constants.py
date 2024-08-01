@@ -33,6 +33,14 @@ img_selected_sound_button_open_source = "Buttons/MainMenu/Sound_Button_Open_Sele
 
 img_tree_with_leaves_source = "Tree/Tree_With_Leaves.png"
 
+img_hand_zero_fingers_source = "Hand/Zero_Fingers.png"
+img_hand_one_finger_source = "Hand/One_Finger.png"
+img_hand_two_fingers_source = "Hand/Two_Fingers.png"
+img_hand_three_fingers_source = "Hand/Three_Fingers.png"
+img_hand_four_fingers_source = "Hand/Four_Fingers.png"
+img_hand_five_fingers_source = "Hand/Five_Fingers.png"
+
+
 
 
 img_leaf1 = pygame.image.load(os.path.join(device_relative_path, img_leaf1_source))
@@ -49,6 +57,14 @@ img_selected_sound_button_open = pygame.image.load(os.path.join(device_relative_
 
 img_tree_with_leaves = pygame.image.load(os.path.join(device_relative_path, img_tree_with_leaves_source))
 
+img_hand_zero_fingers = pygame.image.load(os.path.join(device_relative_path, img_hand_zero_fingers_source))
+img_hand_one_finger = pygame.image.load(os.path.join(device_relative_path, img_hand_one_finger_source))
+img_hand_two_fingers = pygame.image.load(os.path.join(device_relative_path, img_hand_two_fingers_source))
+img_hand_three_fingers = pygame.image.load(os.path.join(device_relative_path, img_hand_three_fingers_source))
+img_hand_four_fingers = pygame.image.load(os.path.join(device_relative_path, img_hand_four_fingers_source))
+img_hand_five_fingers = pygame.image.load(os.path.join(device_relative_path, img_hand_five_fingers_source))
+
+
 
 
 img_sound_button_closed = pygame.transform.scale(img_sound_button_closed, (200, 200))
@@ -57,6 +73,32 @@ img_selected_sound_button_closed = pygame.transform.scale(img_selected_sound_but
 img_selected_sound_button_open = pygame.transform.scale(img_selected_sound_button_open, (200, 200))
 
 img_tree_with_leaves = pygame.transform.scale(img_tree_with_leaves, (800, 800))
+
+hand_scale = 1.1
+
+new_size = img_hand_zero_fingers.get_size()
+new_zero_size = (new_size[0] * hand_scale, new_size[1] * hand_scale)
+img_hand_zero_fingers = pygame.transform.scale(img_hand_zero_fingers, new_zero_size)
+
+new_size = img_hand_one_finger.get_size()
+new_one_size = (new_size[0] * hand_scale, new_size[1] * hand_scale)
+img_hand_one_finger = pygame.transform.scale(img_hand_one_finger, new_one_size)
+
+new_size = img_hand_two_fingers.get_size()
+new_two_size = (new_size[0] * hand_scale, new_size[1] * hand_scale)
+img_hand_two_fingers = pygame.transform.scale(img_hand_two_fingers, new_two_size)
+
+new_size = img_hand_three_fingers.get_size()
+new_three_size = (new_size[0] * hand_scale, new_size[1] * hand_scale)
+img_hand_three_fingers = pygame.transform.scale(img_hand_three_fingers, new_three_size)
+
+new_size = img_hand_four_fingers.get_size()
+new_four_size = (new_size[0] * hand_scale, new_size[1] * hand_scale)
+img_hand_four_fingers = pygame.transform.scale(img_hand_four_fingers, new_four_size)
+
+new_size = img_hand_five_fingers.get_size()
+new_five_size = (new_size[0] * hand_scale, new_size[1] * hand_scale)
+img_hand_five_fingers = pygame.transform.scale(img_hand_five_fingers, new_five_size)
 
 
 
