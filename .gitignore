@@ -27,9 +27,6 @@ test.py
 *.hdp
 *.wdp
 
-# Graphics Interchange Format
-*.gif
-
 # RAW
 *.raw
 
